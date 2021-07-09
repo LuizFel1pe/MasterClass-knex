@@ -6,12 +6,19 @@ module.exports = {
       const { user_id, page = 1 } = req.query;
       const query = knex('projects').limit(5).offset((page - 1) * 5);
 
+      const countProjects = knex('projects').count();
+
       if (user_id) {
         query
           .where({ user_id })
           .join('users', 'users.id', '=', 'projects.user_id') /* Junte os campos onde na tabela users (id) === projects (user_id) */
           .select('projects.*', 'users.username') /* traga dessa junção tudo da tabela projects e da tabela user somente o usename */
+          .where('users.deleted_at', null);
+          
+          countProjects.where({ user_id });
       }
+      const [count] = await countProjects;
+      res.header('X-Total-count', count['count  ']);
 
       const results = await query
 
