@@ -1,4 +1,4 @@
-const knex = require('../database'); /* Não precisa do index porque ele ja sabe */
+const knex = require('../database'); /* It doesn't need the index because it already knows what it needs to look for */
 
 module.exports = { 
   async index(req, res) {
