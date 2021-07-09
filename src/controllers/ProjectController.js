@@ -43,5 +43,31 @@ module.exports = {
     } catch(error) {
       next(error);
     };
+  },
+
+  async update(req, res) {
+    try {
+      const { id } = req.params;
+      const { title } = req.body;
+      
+      await knex('projects')
+        .update({ title })
+        .where({ id });
+      
+      return res.send()
+    } catch (error) {
+      next(error);      
+    };
+  },
+
+  async delete(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      await knex('projects').where({ id }).del();
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
   }
 };
