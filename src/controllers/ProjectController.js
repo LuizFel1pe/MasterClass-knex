@@ -3,8 +3,8 @@ const knex = require('../database');
 module.exports = { 
   async index(req, res, next) {
     try {
-      const { user_id } = req.query;
-      const query = knex('projects');
+      const { user_id, page = 1 } = req.query;
+      const query = knex('projects').limit(5).offset((page - 1) * 5);
 
       if (user_id) {
         query
@@ -21,5 +21,20 @@ module.exports = {
     }
   },
 
-  // Continuar tabela de projetos;
+  async create(req, res, next) {
+    try {
+      const { title, user_id } = req.body;
+
+      const newProject = {
+        title, 
+        user_id
+      };
+
+      await knex('projects').insert(newProject);
+
+      return res.status(201).send(newProject);
+    } catch(error) {
+      next(error);
+    };
+  }
 };
